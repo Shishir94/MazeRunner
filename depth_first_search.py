@@ -7,7 +7,6 @@ def depth_first_search(dfs_maze):
 
     source = (0,0)
     goal = (len(dfs_maze)-1, len(dfs_maze)-1)
-    print(goal)
     dfs_maze[source] = -1
     dfs_stack = [source]
     dfs_path = []

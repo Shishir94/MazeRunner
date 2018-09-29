@@ -15,4 +15,6 @@ def maze_plot_final(maze):
     cmap = plt.cm.get_cmap()
     cmap.set_bad("white")
     ax.imshow(maze, cmap=cmap)
-    plt.savefig('figs/bfs/foo.png', bbox_inches='tight')
+    plt.draw()
+    plt.savefig('figs/dfs-new.png', dpi=1000, bbox_inches='tight',)
+    plt.show()
