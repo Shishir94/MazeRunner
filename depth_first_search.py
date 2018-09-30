@@ -12,7 +12,6 @@ def depth_first_search(dfs_maze):
     dfs_path = []
     flag = 0
     neighbors = []
-    flag = 0
 
     while len(dfs_stack) != 0 and flag == 0:
         cur_node = dfs_stack.pop()
@@ -25,7 +24,6 @@ def depth_first_search(dfs_maze):
             for node in neighbors:
                 if node == goal:
                     print("Path found!!!")
-                    print(dfs_path)
                     dfs_maze[goal] = -2
                     maze_plot_final(dfs_maze)
                     flag = 1
