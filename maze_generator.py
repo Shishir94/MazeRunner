@@ -13,7 +13,7 @@ def maze_generator(maze_dimension, maze_probability):
         for j in range(maze_dimension):
             if random.random() <= maze_probability:
                 data[i][j] = 1
-
+            
     data[0][0] = 0
     data[maze_dimension-1][maze_dimension-1] = 0
     return data
