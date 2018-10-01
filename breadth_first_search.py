@@ -17,8 +17,8 @@ def bfs_path(bfs_maze, cur_node, bfs_parent):
     return
 
 
-def breadth_first_search(bfs_maze):
-
+def breadth_first_search(bfs_maze,display=True):
+    bfs_maze=bfs_maze.copy()
     source = (0,0)
     goal = (len(bfs_maze)-1, len(bfs_maze)-1)
     bfs_maze[source] = -1
@@ -39,13 +39,17 @@ def breadth_first_search(bfs_maze):
                 (i,j) = node
                 if node == goal:
                     flag = 1
-                    bfs_path(bfs_maze, cur_node, bfs_parent)
-                    break
+                    if display:
+                        bfs_path(bfs_maze, cur_node, bfs_parent)
+                        break
+                    return 1
                 if bfs_parent[i][j] == None:
                     bfs_parent[i][j] = cur_node
                     bfs_queue.append(node)
         bfs_maze[cur_node] = -1
 
     if flag == 0:
-        print("No Path Found :(")
-        maze_plot_final(bfs_maze)
+        if display:
+            print("No Path Found :(")
+            maze_plot_final(bfs_maze)
+        return 0
