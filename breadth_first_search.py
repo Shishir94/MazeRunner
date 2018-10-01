@@ -1,5 +1,5 @@
-from maze_plot import *
 import matplotlib.pyplot as plt
+from maze_plot import *
 from get_neighbors import *
 import numpy as np
 from collections import deque

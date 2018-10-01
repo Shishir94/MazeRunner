@@ -9,9 +9,6 @@ from a_star import *
 maze_probability = 0.3
 maze_dimension = 1500#int(input("Enter the dimension for maze : \n"))
 maze = maze_generator(maze_dimension, maze_probability)
-maze[maze_dimension-1,maze_dimension-2] = 1
-maze[maze_dimension-2,maze_dimension-2] = 1
-maze[maze_dimension-2, maze_dimension-1] = 1
 a_star(maze)
 #depth_first_search(maze)
 #breadth_first_search(maze)

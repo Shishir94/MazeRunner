@@ -1,7 +1,7 @@
-from maze_plot import *
-from breadth_first_search import *
 import matplotlib.pyplot as plt
+from maze_plot import *
 from get_neighbors import *
+from breadth_first_search import *
 import math
 import numpy as np
 import heapq
