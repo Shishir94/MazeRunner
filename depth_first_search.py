@@ -1,39 +1,44 @@
 from maze_plot import *
 import matplotlib.pyplot as plt
 from get_neighbors import *
-
+import numpy as np
 
 def depth_first_search(dfs_maze, display=True):
     dfs_maze=dfs_maze.copy()
     source = (0,0)
-    goal = (len(dfs_maze)-1, len(dfs_maze)-1)
-    dfs_maze[source] = -1
-    dfs_stack = [source]
-    dfs_path = []
+    goal = ((len(dfs_maze)-1), len(dfs_maze)-1)
+    dfs_stack = np.array([source],dtype=np.int16)
+    dfs_expanded = np.empty((0,2), dtype=np.uint16)
     flag = 0
-
-    while len(dfs_stack) != 0 and flag == 0:
-        cur_node = dfs_stack.pop()
-        dfs_path.append(cur_node)
-        dfs_maze[cur_node] = -2
-        neighbors = traversable_neighbors(dfs_maze, cur_node)
-        if len(neighbors) == 0:
-            dfs_path.pop()
-        else:
-            for node in neighbors:
-                if node == goal:
-                    
-                    dfs_maze[goal] = -2
-                    if display:
-                        print("Path found!!!")
-                        maze_plot_final(dfs_maze)
-                    flag = 1
-                    return 1
-                dfs_stack.append(node)
-        dfs_maze[cur_node] = -1
-    if flag == 0:
+    
+    while len(dfs_stack):
         
-        if display:
-            print("No path found :(")
-            maze_plot_final(dfs_maze)
-        return 0
+        cur_node=dfs_stack[-1]
+        dfs_expanded=np.append(dfs_expanded,[cur_node], axis=0)
+        dfs_maze[tuple(cur_node)]=-1
+        
+        # if the current node is the goal, return successful
+        if np.array_equal(goal, cur_node): 
+            if display:
+                print("Path found!")
+                # change color of the path for better visualization.
+                for node in dfs_stack:
+                    dfs_maze[tuple(node)]=-2
+                plot_maze(dfs_maze)
+            return 1, dfs_expanded, dfs_stack
+
+        neighbors = traversable_neighbors(dfs_maze, cur_node)
+        if not(len(neighbors)):
+            # if no more unexplored neighbors, remove node from stack, i.e. backtrack.
+            dfs_stack=dfs_stack[:-1]
+            continue
+        else:
+            # add next unexplored neighbor to stack.
+            dfs_stack=np.append(dfs_stack, np.array([neighbors[0]],dtype=np.int16),axis=0)
+            
+    # if goal was not reached return unsuccessful.
+    if display:
+        print("No path found :(")
+        plot_maze(dfs_maze)
+        #maze_plot_final(dfs_maze)
+    return 0, dfs_expanded, []

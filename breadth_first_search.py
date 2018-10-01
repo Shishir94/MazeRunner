@@ -4,52 +4,50 @@ from get_neighbors import *
 import numpy as np
 from collections import deque
 
-def bfs_path(bfs_maze, cur_node, bfs_parent):
-    bfs_maze[len(bfs_maze)-1, len(bfs_maze)-1] = -2
-
-    temp_node = cur_node
-    while temp_node != (0,0):
-        bfs_maze[temp_node] = -2
-        (i,j) = temp_node
-        temp_node = bfs_parent[i][j]
-    bfs_maze[0,0] = -2
-    maze_plot_final(bfs_maze)
-    return
-
-
 def breadth_first_search(bfs_maze,display=True):
     bfs_maze=bfs_maze.copy()
     source = (0,0)
     goal = (len(bfs_maze)-1, len(bfs_maze)-1)
-    bfs_maze[source] = -1
-    bfs_visited = np.zeros((len(bfs_maze), len(bfs_maze)), dtype = int)
-    bfs_queue = deque([source])
-    neighbors = []
-    flag = 0
-    bfs_parent = [[None for _ in range(len(bfs_maze))] for _ in range(len(bfs_maze))]
-    #bfs_parent[] = source
+    bfs_queue=np.array([source], dtype=np.int16)
+    bfs_expanded=np.empty((0,2), dtype=np.int16)
+    bfs_parent= np.full((bfs_maze.shape[0], bfs_maze.shape[0],2), -1, dtype=np.int16)
 
-    while len(bfs_queue) != 0 and flag == 0:
-
-        cur_node = bfs_queue.popleft()
-        bfs_maze[cur_node] = -2
+    while len(bfs_queue):
+        
+        cur_node, bfs_queue = bfs_queue[0], bfs_queue[1:]
+        if bfs_maze[tuple(cur_node)]==-1: continue
+        bfs_expanded=np.append(bfs_expanded, np.array([cur_node],dtype=np.int16), axis=0)
+        bfs_maze[tuple(cur_node)] = -1
+        
+        # if current node is goal, return success.
+        if np.array_equal(cur_node, goal):
+            # if goal is reached, deduce the path using the parent array
+            current=goal   
+            bfs_path=np.array([goal], dtype=np.int16)
+            while not(np.array_equal(bfs_parent[current],[-1,-1])):
+                bfs_path=np.append(bfs_path,np.array([bfs_parent[current]], dtype=np.int16), axis=0)
+                current=tuple(bfs_parent[current])
+             
+            # if display is true, plot the path onto image and display it.
+            if display:
+                print("Path found!")
+                for node in bfs_path:
+                    bfs_maze[tuple(node)]=-2
+                    #bfs_path(bfs_maze, cur_node, bfs_parent)
+                plot_maze(bfs_maze)
+                
+            return 1, bfs_expanded, bfs_path
+            
         neighbors = traversable_neighbors(bfs_maze, cur_node)
-        if len(neighbors) != 0:
-            for node in neighbors:
-                (i,j) = node
-                if node == goal:
-                    flag = 1
-                    if display:
-                        bfs_path(bfs_maze, cur_node, bfs_parent)
-                        break
-                    return 1
-                if bfs_parent[i][j] == None:
-                    bfs_parent[i][j] = cur_node
-                    bfs_queue.append(node)
-        bfs_maze[cur_node] = -1
-
-    if flag == 0:
-        if display:
-            print("No Path Found :(")
-            maze_plot_final(bfs_maze)
-        return 0
+        for neighbor in neighbors:
+            # if no parent is assigned to child node, it is neither explore nor in queue.
+            i,j = neighbor
+            if np.array_equal(bfs_parent[i][j], (-1,-1)):
+                bfs_parent[i][j] = cur_node
+                bfs_queue= np.append(bfs_queue, np.array([neighbor], dtype=np.int16), axis=0)
+                    
+    # queue is exmpty and no path was found, return failure.
+    if display:
+        print("No Path Found :(")
+        plot_maze(bfs_maze)
+    return 0,bfs_expanded, [] 

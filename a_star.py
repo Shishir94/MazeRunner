@@ -8,26 +8,21 @@ import heapq
 
 
 def euclidean_distance(a_star_maze):
-    euclid_heuristic = np.zeros((len(a_star_maze), len(a_star_maze)), dtype = int)
-    (x, y) = (len(a_star_maze)-1, len(a_star_maze)-1)
+    euclid_heuristic = np.zeros((len(a_star_maze), len(a_star_maze)), dtype = np.int16)
+    (x, y) = (len(a_star_maze)-1, len(a_star_maze)-1)    
     for i in range(len(a_star_maze)):
         for j in range(len(a_star_maze)):
             euclid_heuristic[i,j] = math.sqrt(math.pow((x - i), 2)+ math.pow((y-j),2))
     return euclid_heuristic
 
-
 def manhattan_distance(a_star_maze):
 
-    manhattan_heuristic = np.zeros((len(a_star_maze), len(a_star_maze)), dtype = int)
+    manhattan_heuristic = np.zeros((len(a_star_maze), len(a_star_maze)), dtype = np.int16)
     (x, y) = (len(a_star_maze)-1, len(a_star_maze)-1)
     for i in range(len(a_star_maze)):
         for j in range(len(a_star_maze)):
             manhattan_heuristic[i,j] = abs(x-i)+abs(y-j)
     return manhattan_heuristic
-
-
-#def a_star_manhattan(a_star_maze):
-
 
 def a_star(a_star_maze,h, display=True):
     a_star_maze=a_star_maze.copy()
@@ -37,41 +32,52 @@ def a_star(a_star_maze,h, display=True):
         heuristic = euclidean_distance(a_star_maze)
     else:
         heuristic = manhattan_distance(a_star_maze)
-
-    a_star_maze[source] = -1
-    a_star_visited = np.zeros((len(a_star_maze), len(a_star_maze)), dtype = int)
-    a_star_parent = [[None for _ in range(len(a_star_maze))] for _ in range(len(a_star_maze))]
+    
+    # the parent array holds the parent of each child node. 
+    a_star_parent=np.full((len(a_star_maze),len(a_star_maze),2),-1,dtype=np.int16)
+    
     a_star_p_queue = []
-    heapq.heappush(a_star_p_queue, (heuristic[source],0,source))
-    flag = 0
-
-    while len(a_star_p_queue) != 0 and flag == 0:
+    heapq.heappush(a_star_p_queue, (np.int16(heuristic[source]),np.int16(0),(np.int16(source[0]),np.int16(source[1]))))
+    a_star_expanded=np.empty((0,2), dtype=np.int16)
+    
+    while len(a_star_p_queue):
 
         cur_heuristic, cur_cost, cur_node = heapq.heappop(a_star_p_queue)
-        a_star_maze[cur_node] = -2
+        cur_node=tuple(cur_node)
+        if a_star_maze[cur_node]==-1: continue
+        a_star_expanded=np.append(a_star_expanded, np.array([cur_node], dtype=np.int16), axis=0)
+        
+        # if current node is goal, return success.
+        if np.array_equal(cur_node, goal):
+            # if goal is reached, deduce the path using the parent array.
+            current=goal   
+            a_star_path=np.array([goal], dtype=np.int16)
+            while not(np.array_equal(a_star_parent[current],[-1,-1])):
+                a_star_path=np.append(a_star_path,np.array([a_star_parent[current]], dtype=np.int16), axis=0)
+                current=tuple(a_star_parent[current])
+             
+            # if display is true, plot the path onto image and display it.
+            if display:
+                print("Path found!")
+                for node in a_star_path:
+                    a_star_maze[tuple(node)]=-2
+                    #bfs_path(bfs_maze, cur_node, bfs_parent)
+                plot_maze(a_star_maze)
+                
+            return 1, a_star_expanded, a_star_path
+        
+        # add neighbors to priortiy queue.
         neighbors = traversable_neighbors(a_star_maze, cur_node)
-        if len(neighbors) != 0:
-            for node in neighbors:
-                (i,j) = node
-                if(node == goal):
-                    flag = 1
-                    a_star_maze[cur_node] = -1
-                    a_star_maze[goal] = -2
-                    if display:
-                        print("Path Found!!!!")
-                        maze_plot_final(a_star_maze)
-                        bfs_path(a_star_maze, cur_node, a_star_parent)
-                    return 1
-                if a_star_parent[i][j] == None:
-                    a_star_parent[i][j] = cur_node
-                    heapq.heappush(a_star_p_queue, ((heuristic[i,j]),cur_cost+1,node))
-
+        for node in neighbors:
+            (i,j) = node
+            if np.array_equal(a_star_parent[i][j], (-1,-1)):
+                a_star_parent[i][j] = np.array(cur_node, dtype=np.int16)
+                heapq.heappush(a_star_p_queue, (np.int16(heuristic[i,j]),np.int16(cur_cost+1),(np.int16(node[0]),np.int16(node[1]))))
+        
         a_star_maze[cur_node] = -1
 
-    if(flag == 0):
-        a_star_maze[source] = -2
-        
-        if display:
-            print("No Path found :(")
-            maze_plot_final(a_star_maze)
-        return 0
+    # if priority queue is empty and goal wasn't reached, return failure.
+    if display:
+        print("No Path found :(")
+        plot_maze(a_star_maze)
+    return 0, a_star_expanded, []

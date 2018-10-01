@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 def maze_plot(maze):
     fig, ax = plt.subplots()
@@ -20,3 +21,25 @@ def maze_plot_final(maze):
     plt.draw()
     plt.savefig('figs/dfs-new.png', dpi=1000, bbox_inches='tight',)
     plt.show()
+
+
+def plot_maze(maze):
+    
+    # create colored image from old image. 
+    # 1. white color represents empty nodes.
+    # 2. black color represents obstacles.
+    # 3. red color represents explored nodes.
+    # 4. green color represents final path.
+    # 5. blue color represents start and goal.
+    colors_dict={0: (255,255,255), 1: (0,0,0), -1: (255,0,0), -2: (0,255,0)}
+    new_img=np.zeros((maze.shape[0],maze.shape[1],3), dtype=np.uint8)
+    for x in range(maze.shape[0]):
+        for y in range(maze.shape[1]):
+            new_img[x,y]=colors_dict[int(maze[x,y])]
+    new_img[0,0]= (0,0,255)
+    new_img[-1,-1] = (0,0,255)
+    
+    
+    plt.figure(0)
+    plt.imshow(new_img)
+    plt.savefig('figs/new.png', dpi=1000, bbox_inches="tight")

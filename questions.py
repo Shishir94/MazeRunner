@@ -19,7 +19,7 @@ def question1_question3(n):
     final_dict={}
     for p in [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]:
         stats={}
-        for dim in np.arange(7000,15000,100):
+        for dim in np.arange(8000,10000,1000):
                 #int(input("Enter the dimension for maze : \n"))
                 dfs_times=[]
                 bfs_times=[]
@@ -54,10 +54,11 @@ def question1_question3(n):
                 a_manhattan_avg=np.mean(a_manhattan_times)
                 stats[dim]={"dfs":(dfs_avg,dfs_count), "bfs":(bfs_avg,bfs_count), 
                      "a_euclid":(a_euclid_avg,a_euclid_count), "a_manhattan":(a_manhattan_avg, a_manhattan_count) }
+                print(p," ",dim," done." )
         final_dict[p]=stats
     print(final_dict)
     with open("data/q1,3.pickle","wb+") as f:
         pickle.dump(final_dict,f)
             
 if __name__=="__main__":
-    question1_question3(1)
+    question1_question3(5)
