@@ -6,14 +6,17 @@ from collections import deque
 
 def bfs_path(bfs_maze, cur_node, bfs_parent):
     bfs_maze[len(bfs_maze)-1, len(bfs_maze)-1] = -2
-
+    count = 2
     temp_node = cur_node
     while temp_node != (0,0):
         bfs_maze[temp_node] = -2
         (i,j) = temp_node
         temp_node = bfs_parent[i][j]
+        count += 1
+    count += 1
     bfs_maze[0,0] = -2
-    maze_plot_final(bfs_maze)
+    print("Path length : ",count)
+    maze_plot_final(bfs_maze,"b")
     return
 
 

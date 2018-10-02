@@ -6,6 +6,20 @@ import math
 import numpy as np
 import heapq
 
+def a_star_path(a_star_maze, cur_node, a_star_parent):
+    a_star_maze[len(a_star_maze)-1, len(a_star_maze)-1] = -2
+    count = 2
+    temp_node = cur_node
+    while temp_node != (0,0):
+        a_star_maze[temp_node] = -2
+        (i,j) = temp_node
+        temp_node = a_star_parent[i][j]
+        count += 1
+    a_star_maze[0,0] = -2
+    print("Path length : ",count)
+    maze_plot_final(a_star_maze,"a")
+    return
+
 
 def euclidean_distance(a_star_maze):
     euclid_heuristic = np.zeros((len(a_star_maze), len(a_star_maze)), dtype = int)
@@ -49,29 +63,34 @@ def a_star(a_star_maze,h, display=True):
 
         cur_heuristic, cur_cost, cur_node = heapq.heappop(a_star_p_queue)
         a_star_maze[cur_node] = -2
+        if(cur_node == goal):
+            flag = 1
+            a_star_maze[cur_node] = -1
+            a_star_maze[goal] = -2
+            if display:
+                print("Path Found!!!!")
+                maze_plot_final(a_star_maze,"a")
+                a_star_path(a_star_maze, cur_node, a_star_parent)
+            return 1
+        """
+        #Mistake in the final goal condition, the condition has to be if the
+        #goal node is popped from  the heap queue and not in the neighboring nodes
+        #as implemented currently
+        """
         neighbors = traversable_neighbors(a_star_maze, cur_node)
         if len(neighbors) != 0:
             for node in neighbors:
                 (i,j) = node
-                if(node == goal):
-                    flag = 1
-                    a_star_maze[cur_node] = -1
-                    a_star_maze[goal] = -2
-                    if display:
-                        print("Path Found!!!!")
-                        maze_plot_final(a_star_maze)
-                        bfs_path(a_star_maze, cur_node, a_star_parent)
-                    return 1
                 if a_star_parent[i][j] == None:
                     a_star_parent[i][j] = cur_node
-                    heapq.heappush(a_star_p_queue, ((heuristic[i,j]),cur_cost+1,node))
+                    heapq.heappush(a_star_p_queue, ((heuristic[i,j])+cur_cost,cur_cost+1,node))
 
         a_star_maze[cur_node] = -1
 
     if(flag == 0):
         a_star_maze[source] = -2
-        
+
         if display:
             print("No Path found :(")
-            maze_plot_final(a_star_maze)
+            maze_plot_final(a_star_maze,"a")
         return 0

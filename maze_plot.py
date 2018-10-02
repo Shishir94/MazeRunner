@@ -9,7 +9,7 @@ def maze_plot(maze):
     #plt.show()
     plt.pause(0.1)
 
-def maze_plot_final(maze):
+def maze_plot_final(maze, s):
     fig, ax = plt.subplots()
     ax.cla()
     cmap = plt.cm.get_cmap()
@@ -18,5 +18,8 @@ def maze_plot_final(maze):
     plt.ylim(len(maze)+10,-10)
     ax.imshow(maze, cmap=cmap)
     plt.draw()
-    plt.savefig('figs/dfs-new.png', dpi=1000, bbox_inches='tight',)
+    if(s=="a"):
+        plt.savefig('figs/a_star-new.png', dpi=1000, bbox_inches='tight',)
+    else:
+        plt.savefig('figs/bfs-new.png', dpi=1000, bbox_inches='tight',)
     plt.show()
