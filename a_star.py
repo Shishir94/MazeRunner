@@ -72,7 +72,7 @@ def a_star(a_star_maze,h, display=True):
             (i,j) = node
             if np.array_equal(a_star_parent[i][j], (-1,-1)):
                 a_star_parent[i][j] = np.array(cur_node, dtype=np.int16)
-                heapq.heappush(a_star_p_queue, (np.int16(heuristic[i,j]),np.int16(cur_cost+1),(np.int16(node[0]),np.int16(node[1]))))
+                heapq.heappush(a_star_p_queue, (np.int16(heuristic[i,j]+cur_cost),np.int16(cur_cost+1),(np.int16(node[0]),np.int16(node[1]))))
         
         a_star_maze[cur_node] = -1
 

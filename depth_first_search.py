@@ -2,6 +2,7 @@ from maze_plot import *
 import matplotlib.pyplot as plt
 from get_neighbors import *
 import numpy as np
+import sys
 
 def depth_first_search(dfs_maze, display=True):
     dfs_maze=dfs_maze.copy()
@@ -9,7 +10,6 @@ def depth_first_search(dfs_maze, display=True):
     goal = ((len(dfs_maze)-1), len(dfs_maze)-1)
     dfs_stack = np.array([source],dtype=np.int16)
     dfs_expanded = np.empty((0,2), dtype=np.uint16)
-    flag = 0
     
     while len(dfs_stack):
         
@@ -31,7 +31,6 @@ def depth_first_search(dfs_maze, display=True):
         if not(len(neighbors)):
             # if no more unexplored neighbors, remove node from stack, i.e. backtrack.
             dfs_stack=dfs_stack[:-1]
-            continue
         else:
             # add next unexplored neighbor to stack.
             dfs_stack=np.append(dfs_stack, np.array([neighbors[0]],dtype=np.int16),axis=0)

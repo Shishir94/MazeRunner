@@ -7,8 +7,8 @@ from time import time
 
 #Set -1 for traversed Elements
 
-maze_probability = 0.3
-maze_dimension = 1500
+maze_probability = 0.2
+maze_dimension = 100
 #maze = maze_generator(maze_dimension, maze_probability)
 maze=maze_generator(maze_dimension,maze_probability)
 t=time()
@@ -22,10 +22,11 @@ t=time()
 #### iii) final_path: numpy array which holds the list of nodes that belong to the path from start to goal. 
 ####                  The array is empty if success_flag is 0.
 
-#success_flag, expanded_nodes, final_path = depth_first_search(maze, display=True)
-success_flag, expanded_nodes, final_path = a_star(maze,"euclid",display=True)
-#success_flag, expanded_nodes, final_path = a_star(maze,"manhattan",display=False)
-#success_flag, expanded_nodes, final_path = breadth_first_search(maze,display=True)
+success_flag, expanded_nodes, final_path1 = depth_first_search(maze, display=False)
+#success_flag, expanded_nodes, final_path2 = a_star(maze,"euclid",display=False)
+
+#success_flag, expanded_nodes, final_path3 = a_star(maze,"manhattan",display=False)
+#success_flag, expanded_nodes, final_path1 = breadth_first_search(maze,display=False)
 
 
 print("running time: ", time()-t)
