@@ -22,11 +22,12 @@ def a_star_path(a_star_maze, cur_node, a_star_parent):
 
 
 def euclidean_distance(a_star_maze):
-    euclid_heuristic = np.zeros((len(a_star_maze), len(a_star_maze)), dtype = int)
+    euclid_heuristic = np.zeros((len(a_star_maze), len(a_star_maze)))
     (x, y) = (len(a_star_maze)-1, len(a_star_maze)-1)
     for i in range(len(a_star_maze)):
         for j in range(len(a_star_maze)):
             euclid_heuristic[i,j] = math.sqrt(math.pow((x - i), 2)+ math.pow((y-j),2))
+    print(euclid_heuristic)
     return euclid_heuristic
 
 
@@ -69,7 +70,6 @@ def a_star(a_star_maze,h, display=True):
             a_star_maze[goal] = -2
             if display:
                 print("Path Found!!!!")
-                maze_plot_final(a_star_maze,"a")
                 a_star_path(a_star_maze, cur_node, a_star_parent)
             return 1
         """

@@ -19,9 +19,9 @@ t=time()
 
 #print(depth_first_search(maze,display=False))
 print("A-Star :")
-#print(a_star(maze,"euclid",display=True))
-print(a_star(maze,"manhattan",display=True))
-print("BFS :")
-print(breadth_first_search(maze,display=True))
+print(a_star(maze,"euclid",display=True))
+#print(a_star(maze,"manhattan",display=True))
+#print("BFS :")
+#print(breadth_first_search(maze,display=True))
 
 print("running time: ", time()-t)
