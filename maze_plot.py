@@ -23,7 +23,7 @@ def maze_plot_final(maze):
     plt.show()
 
 
-def plot_maze(maze):
+def plot_maze(maze,algo):
     
     # create colored image from old image. 
     # 1. white color represents empty nodes.
@@ -42,4 +42,4 @@ def plot_maze(maze):
     
     plt.figure(0)
     plt.imshow(new_img)
-    plt.savefig('figs/new.png', dpi=1000, bbox_inches="tight")
+    plt.savefig('figs/'+algo+"-recent.jpg", dpi=1000, bbox_inches="tight")

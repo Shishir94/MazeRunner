@@ -3,15 +3,16 @@ from maze_plot import *
 from get_neighbors import *
 import numpy as np
 from collections import deque
+import matplotlib.pyplot as plt
 
-def breadth_first_search(bfs_maze,display=True):
+def breadth_first_search(bfs_maze,display=False):
     bfs_maze=bfs_maze.copy()
     source = (0,0)
     goal = (len(bfs_maze)-1, len(bfs_maze)-1)
     bfs_queue=np.array([source], dtype=np.int16)
     bfs_expanded=np.empty((0,2), dtype=np.int16)
     bfs_parent= np.full((bfs_maze.shape[0], bfs_maze.shape[0],2), -1, dtype=np.int16)
-
+    max_fringe=1
     while len(bfs_queue):
         
         cur_node, bfs_queue = bfs_queue[0], bfs_queue[1:]
@@ -34,9 +35,9 @@ def breadth_first_search(bfs_maze,display=True):
                 for node in bfs_path:
                     bfs_maze[tuple(node)]=-2
                     #bfs_path(bfs_maze, cur_node, bfs_parent)
-                plot_maze(bfs_maze)
+                plot_maze(bfs_maze,"BFS")
                 
-            return 1, bfs_expanded, bfs_path
+            return 1, bfs_expanded, bfs_path, max_fringe
             
         neighbors = traversable_neighbors(bfs_maze, cur_node)
         for neighbor in neighbors:
@@ -45,9 +46,10 @@ def breadth_first_search(bfs_maze,display=True):
             if np.array_equal(bfs_parent[i][j], (-1,-1)):
                 bfs_parent[i][j] = cur_node
                 bfs_queue= np.append(bfs_queue, np.array([neighbor], dtype=np.int16), axis=0)
-                    
+        if max_fringe<len(bfs_queue):
+            max_fringe=len(bfs_queue)
     # queue is exmpty and no path was found, return failure.
     if display:
         print("No Path Found :(")
-        plot_maze(bfs_maze)
-    return 0,bfs_expanded, [] 
+        plot_maze(bfs_maze,"BFS")
+    return 0,bfs_expanded, [], max_fringe

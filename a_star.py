@@ -5,7 +5,7 @@ from breadth_first_search import *
 import math
 import numpy as np
 import heapq
-
+import matplotlib.pyplot as plt
 
 def euclidean_distance(a_star_maze):
     euclid_heuristic = np.zeros((len(a_star_maze), len(a_star_maze)), dtype = np.int16)
@@ -24,7 +24,7 @@ def manhattan_distance(a_star_maze):
             manhattan_heuristic[i,j] = abs(x-i)+abs(y-j)
     return manhattan_heuristic
 
-def a_star(a_star_maze,h, display=True):
+def a_star(a_star_maze,h, display=False):
     a_star_maze=a_star_maze.copy()
     source = (0,0)
     goal = (len(a_star_maze)-1, len(a_star_maze)-1)
@@ -39,7 +39,7 @@ def a_star(a_star_maze,h, display=True):
     a_star_p_queue = []
     heapq.heappush(a_star_p_queue, (np.int16(heuristic[source]),np.int16(0),(np.int16(source[0]),np.int16(source[1]))))
     a_star_expanded=np.empty((0,2), dtype=np.int16)
-    
+    max_fringe=1
     while len(a_star_p_queue):
 
         cur_heuristic, cur_cost, cur_node = heapq.heappop(a_star_p_queue)
@@ -62,9 +62,9 @@ def a_star(a_star_maze,h, display=True):
                 for node in a_star_path:
                     a_star_maze[tuple(node)]=-2
                     #bfs_path(bfs_maze, cur_node, bfs_parent)
-                plot_maze(a_star_maze)
+                plot_maze(a_star_maze,"Astar-"+h)
                 
-            return 1, a_star_expanded, a_star_path
+            return 1, a_star_expanded, a_star_path, max_fringe
         
         # add neighbors to priortiy queue.
         neighbors = traversable_neighbors(a_star_maze, cur_node)
@@ -75,9 +75,10 @@ def a_star(a_star_maze,h, display=True):
                 heapq.heappush(a_star_p_queue, (np.int16(heuristic[i,j]+cur_cost),np.int16(cur_cost+1),(np.int16(node[0]),np.int16(node[1]))))
         
         a_star_maze[cur_node] = -1
-
+        if max_fringe<len(a_star_p_queue):
+            max_fringe=len(a_star_p_queue)
     # if priority queue is empty and goal wasn't reached, return failure.
     if display:
         print("No Path found :(")
-        plot_maze(a_star_maze)
-    return 0, a_star_expanded, []
+        plot_maze(a_star_maze,"Astar-"+h)
+    return 0, a_star_expanded, [], max_fringe
