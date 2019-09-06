@@ -1,7 +1,7 @@
 from maze_plot import *
 import matplotlib.pyplot as plt
 from get_neighbors import *
-
+å
 
 def depth_first_search(dfs_maze, display=True):
     """
@@ -16,12 +16,10 @@ def depth_first_search(dfs_maze, display=True):
     source = (0,0)
     #Sets the end goal that needs to be reached to be successful
     goal = (len(dfs_maze)-1, len(dfs_maze)-1)
-
     #Intialize the path by setting the source as visited and add it to the stack
     dfs_maze[source] = -1
     dfs_stack = [source]
     dfs_path = []
-
     #A flag variable to be set to true if a path is found from source to goal
     pathFound = 0
 
@@ -37,7 +35,6 @@ def depth_first_search(dfs_maze, display=True):
         cur_node = dfs_stack.pop()
         dfs_path.append(cur_node)
         dfs_maze[cur_node] = -2
-
         #Obtain all the traversable neighbors of the current node
         neighbors = traversable_neighbors(dfs_maze, cur_node)
         #If the current node is a dead end with no traversable neighbors then
@@ -61,8 +58,7 @@ def depth_first_search(dfs_maze, display=True):
                 dfs_stack.append(node)
         #Set to -1 to signify that the node has been visited.
         dfs_maze[cur_node] = -1
-
-    #At the end of while loop if we don't have a path then return 0
+    #At the end of while loop if we don't have a path then return false
     if pathFound == 0:
         if display:
             #If display is true then plot the maze with all the visited nodes.
